@@ -1,167 +1,169 @@
 # Creative Distro Dashboard
 
-A modern, responsive dashboard for managing invites and tracking referral networks in the Creative Distro ecosystem.
-
-## Features
-
-- **User Authentication**: Secure login and registration system
-- **Invite Management**: Send and track invitations with unique referral codes
-- **Network Tracking**: Monitor your referral network across 6 levels
-- **Real-time Statistics**: View invite quotas, success rates, and network growth
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Email Integration**: Automated invite and activation emails
-
-## Architecture
-
-This application uses a modern separated architecture:
-
-- **Frontend**: Static HTML/CSS/JavaScript hosted on Netlify
-- **Backend**: PHP API hosted on Render
-- **Database**: MySQL database for data persistence
-- **Email**: SMTP integration for automated communications
-
-## Quick Start
-
-### For Users
-Visit the live dashboard at: `https://creative-distro-dashboard.netlify.app`
-
-### For Developers
-
-1. **Clone the repository:**
-```bash
-git clone https://github.com/YOUR_USERNAME/creative-distro-dashboard.git
-cd creative-distro-dashboard
-```
-
-2. **Set up environment variables:**
-Copy `.env.example` to `.env` and configure your settings.
-
-3. **Deploy:**
-Follow the detailed instructions in `DEPLOYMENT_GUIDE.md`
+A modern web dashboard for the Creative Distro platform with user management, referral tracking, and network analytics.
 
 ## Project Structure
 
 ```
 dashboard/
-├── frontend/           # Static files for Netlify
-│   ├── index.html     # Main dashboard
-│   ├── login.html     # Login page
-│   ├── join.html      # Registration page
-│   ├── style.css      # Styles
-│   ├── dashboard.js   # Frontend logic
-│   └── icons/         # App icons
-├── backend/            # PHP API for Render
-│   ├── index.php      # Entry point
-│   ├── dashboard_api.php    # API endpoints
+├── frontend/           # Static files for Netlify deployment
+│   ├── index.html      # Main dashboard
+│   ├── login.html      # Login page
+│   ├── join.html       # Registration page
+│   ├── style.css       # Styles
+│   ├── dashboard.js    # Frontend logic
+│   ├── netlify.toml    # Netlify configuration
+│   └── icons/          # App icons
+├── backend/            # PHP API for Render deployment
+│   ├── index.php       # Entry point
+│   ├── dashboard_api.php # API endpoints
 │   ├── dashboard_config.php # Configuration
-│   └── *.php          # Other PHP files
-└── docs/              # Documentation
+│   ├── database_schema.sql # PostgreSQL schema
+│   ├── composer.json   # PHP dependencies
+│   └── other files...
+└── Configuration files
 ```
 
-## API Endpoints
+## Features
 
-### Authentication
-- `POST /auth/login` - User login
-- `POST /auth/register` - User registration
-- `POST /auth/logout` - User logout
-- `POST /auth/activate` - Account activation
+- **User Authentication**: Secure login and registration
+- **Referral System**: Multi-level referral tracking
+- **Network Analytics**: Real-time network statistics
+- **Email Integration**: SMTP email notifications
+- **Responsive Design**: Mobile-friendly interface
+- **API-First**: RESTful API architecture
 
-### Invites
-- `POST /invites/send` - Send an invite
-- `GET /invites/list` - Get user's invites
-- `GET /invites/status` - Get invite status
+## Technology Stack
 
-### User Management
-- `GET /user/profile` - Get user profile
-- `PUT /user/profile` - Update user profile
-- `GET /user/quota` - Get invite quota
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Backend**: PHP 8.4+
+- **Database**: PostgreSQL (production) / MySQL (development)
+- **Deployment**: Netlify (frontend) + Render (backend)
+- **Email**: SMTP integration
 
-### Statistics
-- `GET /stats/dashboard` - Get dashboard statistics
-- `GET /network/stats` - Get network statistics
+## Quick Start
 
-## Technologies Used
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/creative-distro-dashboard.git
+   cd creative-distro-dashboard
+   ```
 
-### Frontend
-- HTML5, CSS3, JavaScript (ES6+)
-- CSS Grid and Flexbox for responsive layout
-- Fetch API for HTTP requests
-- Local Storage for client-side data
+2. **Set up environment variables**
+   - Copy `.env.render` to `.env` in the backend directory
+   - Update with your actual database and SMTP credentials
 
-### Backend
-- PHP 7.4+
-- PDO for database interactions
-- Session management
-- RESTful API design
+3. **Initialize database**
+   - Create a PostgreSQL database
+   - Run the SQL from `backend/database_schema.sql`
 
-### Database
-- MySQL 5.7+
-- Normalized schema design
-- Foreign key constraints
-- Indexed queries for performance
-
-### Deployment
-- **Frontend**: Netlify (Static hosting)
-- **Backend**: Render (PHP hosting)
-- **Database**: Hostinger MySQL
-- **Email**: Zoho SMTP
-
-## Security Features
-
-- Password hashing with PHP's `password_hash()`
-- SQL injection prevention with prepared statements
-- CSRF protection
-- Rate limiting
-- Session management
-- HTTPS enforcement
-- CORS configuration
-
-## Development
-
-### Local Development
-
-1. **Frontend**: Serve the `frontend/` directory with any static server
-2. **Backend**: Use PHP's built-in server or XAMPP/MAMP
-3. **Database**: Set up MySQL locally or use the remote database
-
-### Environment Variables
-
-Required environment variables (see `.env.example`):
-- Database configuration
-- SMTP settings
-- Application URLs
-- Security keys
+4. **Test locally**
+   ```bash
+   # Test database connection
+   php backend/test_db_connection.php
+   
+   # Test SMTP
+   php backend/test_smtp.php
+   ```
 
 ## Deployment
 
-See `DEPLOYMENT_GUIDE.md` for detailed deployment instructions for both Netlify and Render.
+### Frontend (Netlify)
+- Deploy from the `frontend/` directory
+- Static site, no build process required
+- Automatic HTTPS and CDN
 
-## Contributing
+### Backend (Render)
+- Deploy as PHP web service
+- Set environment variables in Render dashboard
+- Automatic scaling and HTTPS
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+### Database
+- Use Render PostgreSQL for production
+- Free tier: 1GB storage, 1M rows
+- Automatic backups included
 
-## License
+## Environment Variables
 
-This project is proprietary software for Creative Distro.
+Required environment variables (set in your deployment platform):
+
+```
+DATABASE_TYPE=pgsql
+DASHBOARD_DB_HOST=your-database-host
+DASHBOARD_DB_NAME=your-database-name
+DASHBOARD_DB_USER=your-database-user
+DASHBOARD_DB_PASS=your-database-password
+DASHBOARD_DB_PORT=5432
+DASHBOARD_BASE_URL=your-frontend-url
+MAIN_SITE_URL=https://creativedistro.com
+SMTP_HOST=your-smtp-host
+SMTP_PORT=587
+SMTP_USERNAME=your-smtp-username
+SMTP_PASSWORD=your-smtp-password
+SMTP_FROM_EMAIL=your-from-email
+SMTP_FROM_NAME=Creative Distro Dashboard
+DEBUG_MODE=false
+LOG_LEVEL=INFO
+SESSION_SECRET=generate-secure-random-string
+ENCRYPTION_KEY=generate-secure-encryption-key
+```
+
+## Security
+
+- All sensitive data uses environment variables
+- `.env` files are excluded from Git
+- HTTPS enforced for all communications
+- CORS properly configured
+- Password hashing with PHP's `password_hash()`
+
+## Database Schema
+
+- **users**: User accounts and referral data
+- **invites**: Invitation system
+- **user_network**: Network relationships
+- **user_activations**: Activation tracking
+- **network_stats**: Cached statistics
+- **email_logs**: Email activity logs
+- **rate_limits**: Rate limiting data
+
+## API Endpoints
+
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `GET /api/user/profile` - Get user profile
+- `POST /api/invites/send` - Send invitation
+- `GET /api/network/stats` - Get network statistics
+- `GET /api/network/tree` - Get network tree
+
+## Development
+
+1. **Local Setup**
+   - Install PHP 8.4+
+   - Set up local database
+   - Configure environment variables
+
+2. **Testing**
+   - Use provided test scripts
+   - Check database connectivity
+   - Verify SMTP configuration
+
+3. **Contributing**
+   - Follow PSR-12 coding standards
+   - Test all changes locally
+   - Update documentation as needed
 
 ## Support
 
-For technical support or questions:
-- Check the `DEPLOYMENT_GUIDE.md` for common issues
-- Review the API documentation
-- Contact the development team
+For technical issues:
+1. Check server logs
+2. Verify environment variables
+3. Test database connectivity
+4. Check browser console for frontend errors
 
-## Changelog
+## License
 
-### v1.0.0 (Current)
-- Initial release
-- User authentication system
-- Invite management
-- Network tracking
-- Responsive dashboard
-- Email integration
-- Netlify/Render deployment ready
+Private project for Creative Distro platform.
+
+---
+
+**Note**: This dashboard is designed for deployment to modern cloud platforms with automatic scaling, SSL, and monitoring capabilities.
