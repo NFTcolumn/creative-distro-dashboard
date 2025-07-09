@@ -13,7 +13,9 @@ define('DASHBOARD_DB_HOST', getenv('DASHBOARD_DB_HOST') ?: 'localhost');
 define('DASHBOARD_DB_NAME', getenv('DASHBOARD_DB_NAME') ?: 'creative_distro_dashboard');
 define('DASHBOARD_DB_USER', getenv('DASHBOARD_DB_USER') ?: 'root');
 define('DASHBOARD_DB_PASS', getenv('DASHBOARD_DB_PASS') ?: '');
+define('DASHBOARD_DB_PORT', getenv('DASHBOARD_DB_PORT') ?: '3306');
 define('DASHBOARD_DB_CHARSET', 'utf8mb4');
+define('DATABASE_TYPE', getenv('DATABASE_TYPE') ?: 'mysql'); // mysql or pgsql
 
 // Application Configuration
 define('DASHBOARD_BASE_URL', getenv('DASHBOARD_BASE_URL') ?: 'https://creative-distro-dashboard.netlify.app');
@@ -51,7 +53,13 @@ function getDashboardDB() {
     
     if ($pdo === null) {
         try {
-            $dsn = "mysql:host=" . DASHBOARD_DB_HOST . ";dbname=" . DASHBOARD_DB_NAME . ";charset=" . DASHBOARD_DB_CHARSET;
+            // Build DSN based on database type
+            if (DATABASE_TYPE === 'pgsql') {
+                $dsn = "pgsql:host=" . DASHBOARD_DB_HOST . ";port=" . DASHBOARD_DB_PORT . ";dbname=" . DASHBOARD_DB_NAME;
+            } else {
+                $dsn = "mysql:host=" . DASHBOARD_DB_HOST . ";port=" . DASHBOARD_DB_PORT . ";dbname=" . DASHBOARD_DB_NAME . ";charset=" . DASHBOARD_DB_CHARSET;
+            }
+            
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

@@ -9,7 +9,7 @@ echo "<h2>Creative Distro Dashboard - Database Connection Test</h2>\n";
 echo "<p>Testing connection to database: " . $_ENV['DASHBOARD_DB_NAME'] . "</p>\n";
 
 try {
-    $pdo = getDatabaseConnection();
+    $pdo = getDashboardDB();
     echo "<p style='color: green;'>✅ Database connection successful!</p>\n";
     
     // Test if tables exist
