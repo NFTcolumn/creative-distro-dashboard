@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
 # Install required PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Enable Apache modules
+RUN a2enmod rewrite headers deflate expires
 
 # Copy application files
 COPY backend/ /var/www/html/
