@@ -7,9 +7,10 @@ RewriteEngine On
 RewriteCond %{REQUEST_METHOD} OPTIONS
 RewriteRule ^(.*)$ index.php [QSA,L]
 
-# Route all requests to index.php (except for existing files)
+# Route all requests to index.php (except for existing files and init_admin.php)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/init_admin\.php$
 RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Security headers
