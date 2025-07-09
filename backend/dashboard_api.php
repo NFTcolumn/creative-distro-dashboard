@@ -18,6 +18,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+/**
+ * Require authentication and return user data
+ */
+function requireAuth() {
+    session_start();
+    
+    if (!isset($_SESSION['dashboard_user_id'])) {
+        sendJsonResponse(['error' => 'Authentication required'], 401);
+    }
+    
+    $pdo = getDashboardDB();
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? AND is_activated = TRUE");
+    $stmt->execute([$_SESSION['dashboard_user_id']]);
+    $user = $stmt->fetch();
+    
+    if (!$user) {
+        sendJsonResponse(['error' => 'User not found'], 401);
+    }
+    
+    return $user;
+}
+
+/**
+ * Send JSON response
+ */
+function sendJsonResponse($data, $statusCode = 200) {
+    http_response_code($statusCode);
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    exit;
+}
+
 // Get the request method and endpoint
 $method = $_SERVER['REQUEST_METHOD'];
 $request = $_SERVER['REQUEST_URI'];
@@ -176,28 +208,6 @@ function getUserProfile($user) {
             'total_successful_invites' => $user['total_successful_invites']
         ]
     ]);
-}
-
-/**
- * Require authentication and return user data
- */
-function requireAuth() {
-    session_start();
-    
-    if (!isset($_SESSION['dashboard_user_id'])) {
-        sendJsonResponse(['error' => 'Authentication required'], 401);
-    }
-    
-    $pdo = getDashboardDB();
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? AND is_activated = TRUE");
-    $stmt->execute([$_SESSION['dashboard_user_id']]);
-    $user = $stmt->fetch();
-    
-    if (!$user) {
-        sendJsonResponse(['error' => 'User not found'], 401);
-    }
-    
-    return $user;
 }
 
 /**
