@@ -9,7 +9,7 @@ echo "<h2>Creative Distro Dashboard - Database Connection Test</h2>\n";
 echo "<p>Testing connection to database: " . $_ENV['DASHBOARD_DB_NAME'] . "</p>\n";
 
 try {
-    $pdo = getDatabaseConnection();
+    $pdo = getDashboardDB();
     echo "<p style='color: green;'>✅ Database connection successful!</p>\n";
     
     // Test if tables exist
@@ -18,8 +18,9 @@ try {
     
     foreach ($tables as $table) {
         try {
-            $stmt = $pdo->query("SHOW TABLES LIKE '$table'");
-            if ($stmt->rowCount() > 0) {
+            $stmt = $pdo->query("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = '$table')");
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result['exists']) {
                 echo "<p style='color: green;'>✅ Table '$table' exists</p>\n";
             } else {
                 echo "<p style='color: red;'>❌ Table '$table' does not exist</p>\n";

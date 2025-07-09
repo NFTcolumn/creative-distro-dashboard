@@ -4,7 +4,7 @@
  */
 
 // API base URL - adjust this to match your server setup
-const API_BASE_URL = 'https://creative-distro-dashboard-api.onrender.com/dashboard_api.php';
+const API_BASE_URL = 'https://creative-distro-dashboard.onrender.com/dashboard_api.php';
 
 // Global state
 let currentUser = null;
