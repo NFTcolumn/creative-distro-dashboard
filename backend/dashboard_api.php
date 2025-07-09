@@ -547,11 +547,11 @@ function loginUser() {
     }
     
     $pdo = getDashboardDB();
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND is_activated = 1");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND is_activated = TRUE");
     $stmt->execute([$input['email']]);
     $user = $stmt->fetch();
     
-    if (!$user || !verifyPassword($input['password'], $user['password'])) {
+    if (!$user || !verifyPassword($input['password'], $user['password_hash'])) {
         sendJsonResponse(['error' => 'Invalid credentials'], 401);
     }
     
