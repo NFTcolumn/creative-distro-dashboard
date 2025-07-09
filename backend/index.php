@@ -28,6 +28,12 @@ $path = parse_url($request_uri, PHP_URL_PATH);
 // Remove leading slash and check if it's an API request
 $path = ltrim($path, '/');
 
+// Special handling for init_admin.php
+if ($path === 'init_admin.php') {
+    require_once 'init_admin.php';
+    exit;
+}
+
 // If it's a direct API call or starts with dashboard_api.php, route to the API
 if ($path === '' || $path === 'dashboard_api.php' || strpos($path, 'dashboard_api.php') !== false) {
     require_once 'dashboard_api.php';
