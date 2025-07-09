@@ -83,7 +83,7 @@ try {
     echo "<hr>\n";
     echo "<h3>Testing Login Functionality:</h3>\n";
     
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = 'admin@creativedistro.com' AND is_activated = 1");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = 'admin@creativedistro.com' AND is_activated = TRUE");
     $stmt->execute();
     $user = $stmt->fetch();
     
