@@ -1,0 +1,11 @@
+{
+    "name": "creative-distro/dashboard-api",
+    "description": "Creative Distro Dashboard API Backend",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "scripts": {
+        "start": "php -S 0.0.0.0:$PORT"
+    }
+}

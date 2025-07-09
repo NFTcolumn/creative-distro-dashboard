@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Creative Distro Dashboard</title>
+    <link rel="icon" type="image/png" href="icons/Favicon.png">
+    <link rel="apple-touch-icon" href="icons/App Icon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="back-to-main">
+            <a href="https://creativedistro.com">← Back to Creative Distro</a>
+        </div>
+
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your Creative Distro Dashboard</p>
+        </div>
+
+        <div class="login-form-container">
+            <div id="alert-container"></div>
+
+            <form class="login-form" id="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
+            </div>
+
+            <div class="signup-link">
+                <p>Need an invite? <a href="https://creativedistro.com/invite">Request access here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API base URL
+        const API_BASE_URL = 'dashboard_api.php';
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLoginPage();
+        });
+
+        /**
+         * Initialize the login page
+         */
+        function initializeLoginPage() {
+            // Check if user is already logged in
+            checkExistingSession();
+
+            // Set up form submission
+            const form = document.getElementById('login-form');
+            form.addEventListener('submit', handleFormSubmission);
+
+            // Check for URL parameters (like activation success)
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            const type = urlParams.get('type');
+
+            if (message) {
+                showAlert(decodeURIComponent(message), type || 'info');
+                // Clean up URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        /**
+         * Check if user is already logged in
+         */
+        async function checkExistingSession() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/user/profile`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    // User is already logged in, redirect to dashboard
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                // User is not logged in, continue with login page
+                console.log('No existing session found');
+            }
+        }
+
+        /**
+         * Handle form submission
+         */
+        async function handleFormSubmission(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const submitButton = document.getElementById('submit-btn');
+
+            try {
+                // Disable submit button
+                submitButton.disabled = true;
+                submitButton.textContent = 'Signing In...';
+
+                // Clear previous alerts
+                clearAlert();
+
+                // Prepare data
+                const data = {
+                    email: formData.get('email'),
+                    password: formData.get('password')
+                };
+
+                // Send login request
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert('Login successful! Redirecting...', 'success');
+                    
+                    // Redirect to dashboard after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+
+                } else {
+                    showAlert(result.error || 'Login failed', 'error');
+                }
+
+            } catch (error) {
+                console.error('Error during login:', error);
+                showAlert('Login failed. Please try again.', 'error');
+            } finally {
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Sign In';
+            }
+        }
+
+        /**
+         * Show forgot password functionality
+         */
+        function showForgotPassword() {
+            showAlert('Password reset functionality will be available soon. Please contact support if you need assistance.', 'info');
+        }
+
+        /**
+         * Show alert message
+         */
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alert-container');
+            if (!alertContainer) return;
+
+            let alertClass = 'alert-error';
+            if (type === 'success') alertClass = 'alert-success';
+            if (type === 'info') alertClass = 'alert-success';
+
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+
+            // Auto-hide info/success messages after 5 seconds
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    clearAlert();
+                }, 5000);
+            }
+        }
+
+        /**
+         * Clear alert message
+         */
+        function clearAlert() {
+            const alertContainer = document.getElementById('alert-container');
+            if (alertContainer) {
+                alertContainer.innerHTML = '';
+            }
+        }
+
+        // Make functions available globally
+        window.showForgotPassword = showForgotPassword;
+    </script>
+</body>
+</html>
