@@ -161,6 +161,46 @@ function handleUser($action, $method) {
 }
 
 /**
+ * Get user profile
+ */
+function getUserProfile($user) {
+    sendJsonResponse([
+        'user' => [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'first_name' => $user['first_name'],
+            'last_name' => $user['last_name'],
+            'referral_code' => $user['referral_code'],
+            'invite_quota' => $user['invite_quota'],
+            'total_invites_sent' => $user['total_invites_sent'],
+            'total_successful_invites' => $user['total_successful_invites']
+        ]
+    ]);
+}
+
+/**
+ * Require authentication and return user data
+ */
+function requireAuth() {
+    session_start();
+    
+    if (!isset($_SESSION['dashboard_user_id'])) {
+        sendJsonResponse(['error' => 'Authentication required'], 401);
+    }
+    
+    $pdo = getDashboardDB();
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? AND is_activated = TRUE");
+    $stmt->execute([$_SESSION['dashboard_user_id']]);
+    $user = $stmt->fetch();
+    
+    if (!$user) {
+        sendJsonResponse(['error' => 'User not found'], 401);
+    }
+    
+    return $user;
+}
+
+/**
  * Handle stats endpoints
  */
 function handleStats($action, $method) {
