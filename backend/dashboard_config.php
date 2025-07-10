@@ -87,7 +87,7 @@ function requireAuth() {
     }
     
     $pdo = getDashboardDB();
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? AND is_activated = 1");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? AND is_activated = TRUE");
     $stmt->execute([$_SESSION['dashboard_user_id']]);
     $user = $stmt->fetch();
     
