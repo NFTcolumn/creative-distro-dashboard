@@ -8,7 +8,7 @@
 require_once 'dashboard_config.php';
 
 // Set CORS headers
-header('Access-Control-Allow-Origin: https://creative-distro-dashboard.netlify.app');
+header('Access-Control-Allow-Origin: https://creative-distro-dash.netlify.app');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Access-Control-Allow-Credentials: true');
@@ -173,8 +173,8 @@ function getUserProfile($user) {
             'last_name' => $user['last_name'],
             'referral_code' => $user['referral_code'],
             'invite_quota' => $user['invite_quota'],
-            'total_invites_sent' => $user['total_invites_sent'],
-            'total_successful_invites' => $user['total_successful_invites']
+            'total_invites_sent' => $user['total_invites_sent'] ?? 0,
+            'total_successful_invites' => $user['total_successful_invites'] ?? 0
         ]
     ]);
 }
